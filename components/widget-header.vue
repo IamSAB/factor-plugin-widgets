@@ -14,7 +14,7 @@ export default {
   },
   computed: {
     tag() {
-      return get(this.widget, "settings.widget.tag", 2);
+      return get(this.widget, "settings.widget.header", 2);
     }
   }
 };

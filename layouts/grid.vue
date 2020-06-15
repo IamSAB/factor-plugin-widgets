@@ -1,52 +1,75 @@
 <template>
   <div :class="containerClasses">
     <div :class="wrapperClasses" v-for="widget in widgets" :key="widget._id">
-      <component
-        :is="widget.render"
-        :widget="widget"
-      />
+      <component :is="widget.render" :widget="widget">
+        <widget-header :widget="widget" />
+      </component>
     </div>
   </div>
 </template>
 
 <script>
+import widgetHeader from "../components/widget-header.vue";
 export default {
-    props: {
-        widgets: {type:Array, required: true},
-        settings: {type:Object, required: true}
+  components: {
+    widgetHeader
+  },
+  props: {
+    widgets: { type: Array, required: true },
+    settings: { type: Object, required: true }
+  },
+  computed: {
+    containerClasses() {
+      return [
+        "grid",
+        this.settings.cols || "grid-cols-2",
+        this.settings.gap || "gap: 2"
+      ];
     },
-    computed: {
-        containerClasses() {
-            return [
-                this.settings.cols || 'grid-cols-2',
-                this.settings.gap || 'gap: 2',
-            ]
-        },
-        wrapperClasses() {
-            return [
-                this.settings.colspan || ''
-            ]
-        }
+    wrapperClasses() {
+      return [this.settings.colspan || ""];
+    },
+    headerTag() {
+      return get(this.widget, "settings.default.header", 2);
     }
+  }
 };
 </script>
 <style lang="postcss">
 .grid {
-    display: grid;
-  .grid-cols-1 {
+  display: grid;
+  &.grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
-  .grid-cols-2 {
+  &.grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .grid-cols-3 {
+  &.grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .grid-cols-4 {
+  &.grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-  .grid-cols-5 {
+  &.grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  &.gap-0 {
+    gap: 0;
+  }
+  &.gap-1 {
+    gap: 0.25rem;
+  }
+  &.gap-2 {
+    gap: 0.5rem;
+  }
+  &.gap-3 {
+    gap: 0.75rem;
+  }
+  &.gap-4 {
+    gap: 1rem;
+  }
+  &.gap-5 {
+    gap: 1.25rem;
   }
   .col-span-1 {
     grid-column: span 1 / span 1;
@@ -62,24 +85,6 @@ export default {
   }
   .col-span-5 {
     grid-column: span 5 / span 5;
-  }
-  .gap-0 {
-    gap: 0;
-  }
-  .gap-1 {
-    gap: 0.25rem;
-  }
-  .gap-2 {
-    gap: 0.5rem;
-  }
-  .gap-3 {
-    gap: 0.75rem;
-  }
-  .gap-4 {
-    gap: 1rem;
-  }
-  .gap-5 {
-    gap: 1.25rem;
   }
 }
 </style>

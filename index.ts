@@ -21,7 +21,7 @@ publicPostTypeConfigs.forEach(c => {
     key: "addApiKey",
     hook: `schema-definition-${c.postType}`,
     callback: (definition) => {
-      definition.widgetPositionSettings = {}
+      definition.positionSettings = {}
       return definition
     },
   })

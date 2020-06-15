@@ -1,7 +1,7 @@
 <template>
   <div>
     <factor-spinner v-if="loading" color-mode="text"/>
-    <component v-else :is="widgetLayoutConfig.render" :layout-settings="layoutSettings" />
+    <component v-else :is="widgetLayoutConfig.render" :settings="positionSettings" :widgets="widgets" />
   </div>
 </template>
 
@@ -25,10 +25,6 @@ export default {
     position: {
       type: String,
       required: true
-    },
-    layout: {
-      type: String,
-      required: true
     }
   },
   data() {
@@ -47,14 +43,6 @@ export default {
       });
     }
     this.loading = false;
-
-    if (
-      !this.positions.find(
-        (position: Record<string, any>) => position.name == this.position
-      )
-    ) {
-      console.log(`Position ${this.position} does not exist.`);
-    }
   },
   computed: {
     index(this: any) {
@@ -75,16 +63,10 @@ export default {
       return routes;
     },
     widgets(this: any) {
-      let isMappedWidget;
       let widgetTypeConfig;
       return this.index.posts.reduce(
         (widgets: Array<Record<string, any>>, widget: Record<string, any>) => {
-          isMappedWidget = widget.mappings.filter(
-            (mapping: Record<string, any>) => {
-              return this.routes.includes(mapping.route) && this.position == mapping.position;
-            }
-          ).length;
-          if (isMappedWidget) {
+          if (widget.position == this.position) {
             widgetTypeConfig = this.widgetTypeConfigs.find(
               (config: widgetTypeConfig) => config.id == widget.widgetType
             );
@@ -98,23 +80,25 @@ export default {
     },
     widgetLayoutConfig(this: any) {
       const layouts = widgetLayoutConfigs();
+      console.log(layouts)
       return layouts.find(
-        (layout: widgetLayoutConfig) => layout.id == this.layout
+        (layout: widgetLayoutConfig) => layout.id == this.positionConfig.layout
       );
     },
     widgetTypeConfigs() {
       return widgetTypeConfigs() || [];
     },
-    positions(): Record<string, any> {
-      return setting("widget.positions");
+    positionConfig(): Record<string, any> {
+      const positions = setting("widget.positions");
+      return positions.find(p => p.value == this.position)
     },
-    layoutSettings() {
+    positionSettings() {
       if (this.post) {
-        return getKeyPath(this.post, "settings.widget", {})
+        return getKeyPath(this.post, `positionSettings.${this.position}`, {})
       }
       else {
         const key = camelCase(this.$route.path)
-        return setting(`widget.layout.settings.${key}`) || {}
+        return setting(`widget.positionSettings.${key}.${this.position}`) || {}
       }
     }
   },
