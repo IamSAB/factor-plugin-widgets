@@ -79,7 +79,6 @@ export default {
     },
     widgetLayoutConfig(this: any) {
       const layouts = widgetLayoutConfigs();
-      console.log(layouts)
       return layouts.find(
         (layout: widgetLayoutConfig) => layout.id == this.positionConfig.layout
       );

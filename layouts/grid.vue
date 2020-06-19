@@ -1,20 +1,14 @@
 <template>
   <div :class="containerClasses">
     <div :class="wrapperClasses(widget)" v-for="widget in widgets" :key="widget._id">
-      <component :is="widget.render" :widget="widget">
-        <widget-header :widget="widget" />
-      </component>
+      <component :is="widget.render" :widget="widget" />
     </div>
   </div>
 </template>
 
 <script>
-import widgetHeader from "../components/widget-header.vue";
 import { get } from "lodash-es"
 export default {
-  components: {
-    widgetHeader
-  },
   props: {
     widgets: { type: Array, required: true },
     settings: { type: Object, required: true }
@@ -26,9 +20,6 @@ export default {
         this.settings.cols || "grid-cols-2",
         this.settings.gap || "gap-2"
       ];
-    },
-    headerTag() {
-      return get(this.widget, "settings.default.header", 2);
     }
   },
   methods: {

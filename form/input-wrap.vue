@@ -31,8 +31,6 @@ import { applyFilters } from "@factor/api";
 
 const components = applyFilters("form-inputs", {});
 
-console.log(components)
-
 export default {
   components,
   inheritAttrs: false,

@@ -26,37 +26,6 @@ export default {
         layout: "grid"
       }
     ],
-    components: {
-      header: (): Promise<any> => import("./components/widget-header.vue")
-    },
-    settings: [
-      {
-        _id: "header",
-        label: "Widget Header",
-        input: "select",
-        description: "Wether to show the widget header or what heading tag to render.",
-        list: [
-          {
-            name:"Hide",
-            value: 0,
-          },
-          ...Array.from({length: 5}, (_, n) => ({name: `Heading ${n}`, value: n})),
-        ],
-        _default: 0
-      },
-      {
-        _id: "classes",
-        label: "Classes",
-        input: "classes",
-        description: "CSS classes [class=\"\"] for the container"
-      },
-      {
-        _id: "styles",
-        label: "Inline Styles",
-        input: "textarea",
-        placeholder: "color: gray; font-weight: 700;",
-        description: "CSS styles [style=\"\"] for the container"
-      }
-    ]
-  },
+    components: {}
+  }
 };

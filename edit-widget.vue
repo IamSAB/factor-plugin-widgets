@@ -5,18 +5,19 @@
     </template>
     <template #primary>
       <dashboard-panel class="compose">
-        <dashboard-input
-          v-model="widget.title"
-          input="factor-input-text"
-          label="Title"
-          class="widget-title"
-        />
         <component v-if="widgetTypeConfig" :is="widgetTypeConfig.edit" :widget-id="widget.id" />
         <div v-else class="placeholder">Please select a widget type</div>
       </dashboard-panel>
     </template>
     <template #meta>
       <dashboard-panel class="widget-media">
+        <dashboard-input
+          v-model="widget.title"
+          input="factor-input-text"
+          label="Title"
+          class="widget-title"
+          description="By default only used as display name in the dashboard. Can be used as rendered title depending on the widget type."
+        />
         <dashboard-input
           v-model="widget.status"
           label="Status"
@@ -25,17 +26,19 @@
         />
         <dashboard-input
           v-model="widget.widgetType"
-          label="Widget Type"
+          label="Type"
           :list="widgetTypeOptions"
           placeholder="Select widget type"
           input="factor-input-select"
+          description="A widget type defines what content is how rendered."
         />
         <dashboard-input
           v-model="widget.position"
-          label="Widget Position"
+          label="Position"
           :list="positionOptions"
           placeholder="Select widget position"
           input="factor-input-select"
+          description="Choose where on the page to show the widget."
         />
         <dashboard-input
           v-model="widget.source"
@@ -45,7 +48,6 @@
         />
       </dashboard-panel>
       <widget-mappings :widget-id="widget.id" />
-      <default-settings :widget-id="widget.id" />
       <slot name="meta" />
     </template>
     <template #secondary>
@@ -67,7 +69,6 @@ import {
 } from "@factor/ui";
 import { emitEvent, stored, storeItem, setting } from "@factor/api";
 import { requestPostSave } from "@factor/post/request";
-import defaultSettings from "./components/default-settings.vue";
 import typeSettings from "./components/type-settings.vue";
 import layoutSettings from "./components/layout-settings.vue";
 import widgetMappings from "./components/widget-mappings.vue";
@@ -82,7 +83,6 @@ export default {
     factorLink,
     factorInputTags,
     factorInputEditor,
-    defaultSettings,
     typeSettings,
     layoutSettings,
     widgetMappings
@@ -106,7 +106,7 @@ export default {
     widgetType: {
       get() {
         return (
-          this.widget.widgetType || this.$route.query.widgetType || "content"
+          this.widget.widgetType || this.$route.query.widgetType || "default"
         );
       },
       set(this: any, v: string) {

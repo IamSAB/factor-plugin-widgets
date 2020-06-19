@@ -20,9 +20,9 @@ import {
 addPostType({
   managePosts: true,
   schemaDefinition: {
-    widgetType: { type: String, default: "content" },
+    widgetType: { type: String, default: "default", index: true },
     routes: { type: [String], index: true },
-    position: { type: String, default: "" },
+    position: { type: String, default: "", index: true },
     mappings: { type: [Object] }
   },
   postType: "widget",
@@ -112,30 +112,41 @@ addWidgetLayout({
       input: "select",
       label: "Spanning columns",
       description: "Make the widget span n columns.",
-      list: Array.from({ length: 5 }, (_, n) => `col-span-${n}`)
+      list: Array.from({ length: 5 }, (_, n) => `col-span-${n}`),
+      _default: "col-span-1"
     }
   ],
   render: (): Promise<any> => import("./layouts/grid.vue")
 })
 
 addWidgetType({
-  id: "content",
-  label: "Content",
+  id: "default",
+  label: "Default",
   description: "Simple content widget",
   settings: [
     {
-      _id: "test",
-      input: "text",
-      label: "Input 1"
+      _id: "header",
+      label: "Header",
+      input: "select",
+      description: "Wether to show the widget header or what heading tag to render.",
+      list: [
+        {
+          name:"Hide",
+          value: 0,
+        },
+        ...Array.from({length: 5}, (_, n) => ({name: `Heading ${n}`, value: n})),
+      ],
+      _default: 0
     },
     {
-      _id: "email",
-      input: "email",
-      label: "Input 2"
-    }
+      _id: "classes",
+      label: "Classes",
+      input: "classes",
+      description: "Add classes to your widget"
+    },
   ],
-  edit: (): Promise<any> => import("./widgets/content/edit.vue"),
-  render: (): Promise<any> => import("./widgets/content/render.vue"),
+  edit: (): Promise<any> => import("./widgets/default/edit.vue"),
+  render: (): Promise<any> => import("./widgets/default/render.vue"),
 })
 
 addFilter({

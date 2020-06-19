@@ -20,11 +20,12 @@
   </dashboard-panel>
 </template>
 <script lang="ts">
-import { dashboardInput, dashboardPanel } from "@factor/ui";
+import { dashboardPanel } from "@factor/ui";
 import { getDefaultTemplateSettings as getDefaultWidgetSettings } from "@factor/templates";
 import { stored, storeItem } from "@factor/api";
 import { getWidgetTypeConfig } from "../widget";
 import { get } from "lodash-es";
+import dashboardInput from "../form/input-dashboard.vue"
 
 export default {
   components: { dashboardInput, dashboardPanel },

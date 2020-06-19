@@ -1,23 +1,19 @@
 <template>
   <div>
-    <slot />
+    <header class="widget-header">
+      <heading class :tag="tag">{{ widget.title }}</heading>
+    </header>
     <div v-formatted-text="content" />
   </div>
 </template>
 
 <script>
 import { renderMarkdown } from "@factor/api";
+import heading from "./heading"
 
 export default {
   components: {
-    heading: {
-      props: {
-        h: { type: Number, default: 2 }
-      },
-      render: function(h) {
-        return h(`h${this.h}`, this.$slots.default);
-      }
-    }
+    heading
   },
   props: {
     widget: {
@@ -28,6 +24,9 @@ export default {
   computed: {
     content() {
       return renderMarkdown(this.widget.content);
+    },
+    tag() {
+      return get(this.widget, "settings.default.header", 2);
     }
   }
 };
