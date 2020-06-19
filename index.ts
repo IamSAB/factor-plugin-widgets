@@ -1,6 +1,21 @@
 import { addPostType, pushToFilter, addFilter, postTypesConfig } from "@factor/api";
 import { addWidgetType, addWidgetLayout } from "./widget";
-
+import {
+  factorInputEmail,
+  factorInputDate,
+  factorInputText,
+  factorInputTags,
+  factorInputPhone,
+  factorInputCheckbox,
+  factorInputBirthday,
+  factorInputImageUpload,
+  factorInputSelect,
+  factorInputSubmit,
+  factorInputPassword,
+  factorInputTextarea,
+  factorInputEditor,
+  factorInputSortable
+} from "@factor/ui"
 
 addPostType({
   managePosts: true,
@@ -37,6 +52,29 @@ pushToFilter({
   },
 })
 
+const viewports = [
+  {
+    label: "Default",
+    prefix: "",
+  },
+  {
+    label: "Small",
+    prefix: "sm:",
+  },
+  {
+    label: "Medium",
+    prefix: "md:",
+  },
+  {
+    label: "Large",
+    prefix: "lg:",
+  },
+  {
+    label: "xLarge",
+    prefix: "xl:",
+  }
+]
+
 addWidgetLayout({
   id: "grid",
   label: "Grid",
@@ -44,18 +82,27 @@ addWidgetLayout({
   layoutSettings: [
     {
       _id: "cols",
-      input: "select",
+      input: "classes",
       label: "Columns",
-      description: "Grid with n equally sized columns.",
-      list: Array.from({length: 5}, (_, n) => `grid-cols-${n}`),
-      _default: "grid-cols-2"
+      description: "Grid with n equally sized columns. Make it responsive with four viewports.",
+      list: viewports.map(v => {
+        return {
+          label: v.label,
+          options: Array.from({ length: 5 }, (_, n) => ({
+            label: `${n+1} columns`,
+            name: `${v.prefix}grid-cols-${n+1}`,
+            value: `${v.prefix}grid-cols-${n+1}`
+          }))
+        } 
+      }),
+      _default: ["grid-cols-1", "sm:grid-cols-2", "md:grid-cols-3", "lg:grid-cols-4", "xl:grid-cols-5"]
     },
     {
       _id: "gap",
       input: "select",
       label: "Gap",
       description: "Control gutters between grid rows and columns.",
-      list: Array.from({length: 5}, (_, n) => `gap-${n}`),
+      list: Array.from({ length: 5 }, (_, n) => `gap-${n}`),
       _default: "gap-3"
     }
   ],
@@ -65,7 +112,7 @@ addWidgetLayout({
       input: "select",
       label: "Spanning columns",
       description: "Make the widget span n columns.",
-      list: Array.from({length: 5}, (_, n) => `col-span-${n}`)
+      list: Array.from({ length: 5 }, (_, n) => `col-span-${n}`)
     }
   ],
   render: (): Promise<any> => import("./layouts/grid.vue")
@@ -89,4 +136,30 @@ addWidgetType({
   ],
   edit: (): Promise<any> => import("./widgets/content/edit.vue"),
   render: (): Promise<any> => import("./widgets/content/render.vue"),
+})
+
+addFilter({
+  key: "factorInputs",
+  hook: "form-inputs",
+  callback: (inputs) => {
+    return {
+      ...inputs,
+      factorInputWrap: (): Promise<any> => import("./form/input-wrap.vue"),
+      factorInputClasses: (): Promise<any> => import("./form/input-classes.vue"),
+      factorInputEmail,
+      factorInputDate,
+      factorInputText,
+      factorInputTags,
+      factorInputPhone,
+      factorInputCheckbox,
+      factorInputBirthday,
+      factorInputImageUpload,
+      factorInputSelect,
+      factorInputSubmit,
+      factorInputPassword,
+      factorInputTextarea,
+      factorInputEditor,
+      factorInputSortable
+    }
+  }
 })

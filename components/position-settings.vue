@@ -27,11 +27,12 @@
   </div>
 </template>
 <script lang="ts">
-import { dashboardInput, dashboardBtn } from "@factor/ui";
+import { dashboardBtn } from "@factor/ui";
+import dashboardInput from "../form/input-dashboard.vue"
 import { setting, stored, storeItem } from "@factor/api";
 import { getWidgetLayoutConfigOfPosition } from "../widget";
 import { getDefaultTemplateSettings as getDefaultLayoutSettings } from "@factor/templates";
-import { set, get } from "lodash-es";
+import { set, get, cloneDeep } from "lodash-es";
 export default {
   props: {
     postId: {
@@ -54,10 +55,10 @@ export default {
     const settings = this.post.positionSettings || {};
     this.positions.forEach(p => {
       widgetLayoutConfig = getWidgetLayoutConfigOfPosition(p.value);
-      settings[p.value] = getDefaultLayoutSettings(
+      settings[p.value] = cloneDeep(getDefaultLayoutSettings(
           widgetLayoutConfig.layoutSettings,
           get(settings, p.value, {})
-        )
+        ))
     });
     
     this.post = { ...this.post, positionSettings: settings};
@@ -90,15 +91,19 @@ export default {
   watch: {
     settings: {
       handler: function(this: any, v) {
-        const post = this.post;
-        set(post, `positionSettings.${this.position}`, v);
-        this.post = { ...post };
+        this.post = {
+          ...this.post,
+          positionSettings: {
+            ...this.post.positionSettings,
+            [this.position]: v
+          }
+        }
       },
       deep: true
     },
     position: {
       handler: function(this: any, v) {
-        this.settings = this.post.positionSettings[v]
+        this.settings = { ...this.post.positionSettings[v]}
       }
     }
   }

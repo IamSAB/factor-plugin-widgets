@@ -1,6 +1,6 @@
 <template>
   <dashboard-panel
-    title="Widget Layout Settings"
+    title="Widget Type Settings"
     note="Adjust settings specific to the chosen widget type."
   >
     <div v-if="fields.length == 0">No settings available the selected widget type.</div>

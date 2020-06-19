@@ -47,8 +47,7 @@ export default {
       {
         _id: "classes",
         label: "Classes",
-        input: "tags",
-        placeholder: "Enter classes",
+        input: "classes",
         description: "CSS classes [class=\"\"] for the container"
       },
       {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :id="this.position">
     <factor-spinner v-if="loading" color-mode="text"/>
     <component v-else :is="widgetLayoutConfig.render" :settings="positionSettings" :widgets="widgets" />
   </div>
@@ -14,7 +14,6 @@ import { widgetTypeConfig, widgetLayoutConfig } from "./types";
 import { get as getKeyPath, camelCase } from "lodash-es"
 
 const widgetHeader = setting("widget.components.header");
-console.log(widgetHeader)
 
 export default {
   components: {
@@ -57,7 +56,7 @@ export default {
         routes.push(...[this.post._id, this.post.postType]);
       }
       else {
-        routes.push(this.route.$path)
+        routes.push(this.$route.path)
       }
       routes.push("all");
       return routes;

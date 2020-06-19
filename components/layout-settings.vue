@@ -25,11 +25,12 @@
   </dashboard-panel>
 </template>
 <script lang="ts">
-import { dashboardInput, dashboardPanel } from "@factor/ui";
+import { dashboardPanel } from "@factor/ui";
 import { getDefaultTemplateSettings as getDefaultLayoutSettings } from "@factor/templates";
 import { stored, storeItem } from "@factor/api";
 import { getWidgetLayoutConfigOfPosition } from "../widget";
 import { get } from "lodash-es";
+import dashboardInput from "../form/input-dashboard.vue"
 
 export default {
   components: { dashboardInput, dashboardPanel },
@@ -68,11 +69,12 @@ export default {
       },
       deep: true
     },
-    "widget.widgetType": {
+    "widget.position": {
       handler() {
         if (!this.loadedSettings) {
           this.settings = getDefaultLayoutSettings(
             this.fields,
+            // {}
             get(this.widget, "settings.layout", {})
           );
           this.loadedSettings = true;
