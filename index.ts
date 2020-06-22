@@ -149,6 +149,14 @@ addWidgetType({
   render: (): Promise<any> => import("./widgets/default/render.vue"),
 })
 
+addWidgetType({
+  id: "menu",
+  label: "Menu",
+  description: "Create a menu with links to posts, post types, content routes and external sites.",
+  edit: (): Promise<any> => import("./widgets/menu/edit.vue"),
+  render: (): Promise<any> => import("./widgets/menu/render.vue"),
+})
+
 addFilter({
   key: "factorInputs",
   hook: "form-inputs",

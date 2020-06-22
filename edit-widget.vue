@@ -4,9 +4,9 @@
       <dashboard-btn btn="primary" :loading="sending" @click="saveWidget()">Update</dashboard-btn>
     </template>
     <template #primary>
-      <dashboard-panel class="compose">
-        <component v-if="widgetTypeConfig" :is="widgetTypeConfig.edit" :widget-id="widget.id" />
-        <div v-else class="placeholder">Please select a widget type</div>
+      <component v-if="widgetTypeConfig" :is="widgetTypeConfig.edit" :widget-id="widget.id" />
+      <dashboard-panel v-else class="compose">
+        <div class="placeholder">Please select a widget type</div>
       </dashboard-panel>
     </template>
     <template #meta>
