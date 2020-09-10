@@ -1,5 +1,5 @@
 <template>
-  <div :id="this.position">
+  <div :id="position">
     <factor-spinner v-if="loading" color-mode="text"/>
     <component v-else :is="widgetLayoutConfig.render" :settings="positionSettings" :widgets="widgets" />
   </div>
@@ -63,11 +63,15 @@ export default {
     },
     widgets(this: any) {
       let widgetTypeConfig;
-      return this.index.posts.reduce(
+      let ws = this.index.posts.reduce(
         (widgets: Array<Record<string, any>>, widget: Record<string, any>) => {
           if (widget.position == this.position) {
+            console.log(widget.position)
+            console.log(widget.widgetType)
             widgetTypeConfig = this.widgetTypeConfigs.find(
-              (config: widgetTypeConfig) => config.id == widget.widgetType
+              (config: widgetTypeConfig) => {
+                return config.id == widget.widgetType
+              }
             );
             widget.render = widgetTypeConfig.render;
             widgets.push(widget);
@@ -76,11 +80,14 @@ export default {
         },
         []
       );
+      return ws
     },
     widgetLayoutConfig(this: any) {
       const layouts = widgetLayoutConfigs();
       return layouts.find(
-        (layout: widgetLayoutConfig) => layout.id == this.positionConfig.layout
+        (layout: widgetLayoutConfig) => {
+          return layout.id == this.positionConfig.layout
+        }
       );
     },
     widgetTypeConfigs() {

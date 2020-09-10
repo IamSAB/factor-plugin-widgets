@@ -1,5 +1,10 @@
 export default {
   widget: {
+    defaults: {
+      type: "html",
+      layout: "Raw",
+      position: "top"
+    },
     positions: [
       {
         value: "navbar",

@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <dashboard-panel name="Markdown">
     <dashboard-input
       v-model="widget.content"
       input="factor-input-editor"
       label="Content"
       class="widget-content"
     />
-  </div>
+  </dashboard-panel>
 </template>
 <script lang="ts">
 import { stored, storeItem } from "@factor/api";

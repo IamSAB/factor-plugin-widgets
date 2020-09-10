@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@factor/core": "^1.0.0",
+    "vue-codemirror": "^4.0.6",
     "vue-nestable": "^2.5.3"
   },
   "factor": {

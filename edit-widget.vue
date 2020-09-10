@@ -51,7 +51,7 @@
       <slot name="meta" />
     </template>
     <template #secondary>
-      <type-settings :widget-id="widget.id" />
+      <widget-settings :widget-id="widget.id" />
       <layout-settings :widget-id="widget.id" />
       <slot name="edit" />
     </template>
@@ -69,7 +69,7 @@ import {
 } from "@factor/ui";
 import { emitEvent, stored, storeItem, setting } from "@factor/api";
 import { requestPostSave } from "@factor/post/request";
-import typeSettings from "./components/type-settings.vue";
+import widgetSettings from "./components/widget-settings.vue";
 import layoutSettings from "./components/layout-settings.vue";
 import widgetMappings from "./components/widget-mappings.vue";
 import { widgetTypeConfigs } from "./widget";
@@ -83,7 +83,7 @@ export default {
     factorLink,
     factorInputTags,
     factorInputEditor,
-    typeSettings,
+    widgetSettings,
     layoutSettings,
     widgetMappings
   },
