@@ -4,7 +4,7 @@
       <dashboard-btn btn="primary" :loading="sending" @click="saveWidget()">Update</dashboard-btn>
     </template>
     <template #primary>
-      <component v-if="widgetTypeConfig" :is="widgetTypeConfig.edit" :widget-id="widget.id" />
+      <component v-if="config" :is="config.dashboard" :widget-id="widget.id" />
       <dashboard-panel v-else class="compose">
         <div class="placeholder">Please select a widget type</div>
       </dashboard-panel>
@@ -25,9 +25,9 @@
           input="factor-input-select"
         />
         <dashboard-input
-          v-model="widget.widgetType"
+          v-model="widget.type"
           label="Type"
-          :list="widgetTypeOptions"
+          :list="typeOptions"
           placeholder="Select widget type"
           input="factor-input-select"
           description="A widget type defines what content is how rendered."
@@ -47,12 +47,11 @@
           description="Used when sharing DB in multiple apps"
         />
       </dashboard-panel>
-      <widget-mappings :widget-id="widget.id" />
+      <mappings :widget-id="widget.id" />
       <slot name="meta" />
     </template>
     <template #secondary>
-      <widget-settings :widget-id="widget.id" />
-      <layout-settings :widget-id="widget.id" />
+      <item-settings :widget-id="widget.id" />
       <slot name="edit" />
     </template>
   </dashboard-page>
@@ -69,10 +68,10 @@ import {
 } from "@factor/ui";
 import { emitEvent, stored, storeItem, setting } from "@factor/api";
 import { requestPostSave } from "@factor/post/request";
-import widgetSettings from "./components/widget-settings.vue";
-import layoutSettings from "./components/layout-settings.vue";
-import widgetMappings from "./components/widget-mappings.vue";
-import { widgetTypeConfigs } from "./widget";
+import itemSettings from "./item.vue";
+import mappings from "./mappings.vue";
+import { WidgetTypeConfig } from 'widgets/types';
+import { getWidgetTypes } from 'widgets';
 
 export default {
   components: {
@@ -83,9 +82,8 @@ export default {
     factorLink,
     factorInputTags,
     factorInputEditor,
-    widgetSettings,
-    layoutSettings,
-    widgetMappings
+    itemSettings,
+    mappings
   },
   data() {
     return {
@@ -103,18 +101,15 @@ export default {
     };
   },
   computed: {
-    widgetType: {
+    type: {
       get() {
         return (
-          this.widget.widgetType || this.$route.query.widgetType || "default"
+          this.widget.type || this.$route.query.type
         );
       },
       set(this: any, v: string) {
         this.widget.type = v;
       }
-    },
-    isNew() {
-      return !("createdAt" in this.widget);
     },
     widget: {
       get(this: any) {
@@ -128,20 +123,16 @@ export default {
       return this.$route.query._id || "";
     },
     title(this: any) {
-      const mode = this.isNew ? "Add New" : "Edit";
-      const name = this.widgetTypeConfig.label;
-      return `${mode} ${name} Widget`;
+      const mode = !("createdAt" in this.widget) ? "Add New" : "Edit";
+      return `${mode} Widget`;
     },
-    widgetTypeConfigs() {
-      return widgetTypeConfigs();
+    config(this: any): WidgetTypeConfig | undefined {
+      return getWidgetTypes().find(_ => _.type == this.type);
     },
-    widgetTypeConfig(this: any) {
-      return this.widgetTypeConfigs.find(c => c.id == this.widgetType);
-    },
-    widgetTypeOptions() {
-      return this.widgetTypeConfigs.map(c => ({
-        value: c.id,
-        name: c.label
+    typeOptions(this: any) {
+      return getWidgetTypes().map(_ => ({
+        value: _.type,
+        name: _.name
       }));
     },
     positionOptions() {
@@ -156,7 +147,7 @@ export default {
       try {
         saved = await requestPostSave({
           post: this.widget,
-          postType: this.postType
+          postType: "widget"
         });
       } catch {
         this.sending = false;

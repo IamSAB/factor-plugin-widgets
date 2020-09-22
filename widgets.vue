@@ -1,16 +1,16 @@
 <template>
   <div :id="position">
     <factor-spinner v-if="loading" color-mode="text"/>
-    <component v-else :is="widgetLayoutConfig.render" :settings="positionSettings" :widgets="widgets" />
+    <component v-else :is="layoutConfig.component" :settings="positionSettings" :widgets="widgets" />
   </div>
 </template>
 
 <script lang="ts">
-import { widgetLayoutConfigs, widgetTypeConfigs } from "./widget";
 import { requestPostIndex, stored, setting } from "@factor/api";
 import { factorSpinner } from "@factor/ui";
 import { PostStatus } from "@factor/post/types";
-import { widgetTypeConfig, widgetLayoutConfig } from "./types";
+import { getLayoutForPosition, getWidgetTypes } from ".";
+import { WidgetTypeConfig } from "./types";
 import { get as getKeyPath, camelCase } from "lodash-es"
 
 const widgetHeader = setting("widget.components.header");
@@ -62,48 +62,36 @@ export default {
       return routes;
     },
     widgets(this: any) {
-      let widgetTypeConfig;
-      let ws = this.index.posts.reduce(
+      const _all = getWidgetTypes()
+      let _res;
+      return this.index.posts.reduce(
         (widgets: Array<Record<string, any>>, widget: Record<string, any>) => {
           if (widget.position == this.position) {
-            console.log(widget.position)
-            console.log(widget.widgetType)
-            widgetTypeConfig = this.widgetTypeConfigs.find(
-              (config: widgetTypeConfig) => {
-                return config.id == widget.widgetType
+            _res = _all.find(
+              (config: WidgetTypeConfig) => {
+                return config.type == widget.type
               }
             );
-            widget.render = widgetTypeConfig.render;
-            widgets.push(widget);
+            if (_res) {
+              widget.component = _res.component;
+              widgets.push(widget);
+            }
           }
           return widgets;
         },
         []
       );
-      return ws
     },
-    widgetLayoutConfig(this: any) {
-      const layouts = widgetLayoutConfigs();
-      return layouts.find(
-        (layout: widgetLayoutConfig) => {
-          return layout.id == this.positionConfig.layout
-        }
-      );
-    },
-    widgetTypeConfigs() {
-      return widgetTypeConfigs() || [];
-    },
-    positionConfig(): Record<string, any> {
-      const positions = setting("widget.positions");
-      return positions.find(p => p.value == this.position)
+    layoutConfig(this: any) {
+      return getLayoutForPosition(this.position)
     },
     positionSettings() {
       if (this.post) {
-        return getKeyPath(this.post, `positionSettings.${this.position}`, {})
+        return getKeyPath(this.post, `positionsLayoutSettings.${this.position}`, {})
       }
       else {
         const key = camelCase(this.$route.path)
-        return setting(`widget.positionSettings.${key}.${this.position}`) || {}
+        return setting(`widget.layoutSettings.${key}.${this.position}`) || {}
       }
     }
   },

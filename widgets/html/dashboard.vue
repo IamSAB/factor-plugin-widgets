@@ -1,6 +1,6 @@
 <template>
   <dashboard-panel name="HTML">
-    <codemirror v-model="html" :options="options" />
+    <codemirror v-model="widget.content" :options="options" />
   </dashboard-panel>
 </template>
 <script lang="ts">
@@ -38,6 +38,7 @@ export default {
         theme: 'default',
         lineNumbers: true,
         line: true,
+        pollInterval: 2000
       }
     };
   }

@@ -1,17 +1,25 @@
-export interface widgetTypeConfig {
-  id: string,
-  label?: string,
-  description?: string,
-  settings?: Record<string, any>,
-  edit: () => Promise<any>,
-  render: () => Promise<any>
+export interface WidgetTypeConfig {
+  name?: string,
+  type: string,
+  dashboard: () => Promise<any>
+  component: () => Promise<any>
 }
 
-export interface widgetLayoutConfig {
-  id: string,
-  label?: string,
-  description?: string,
-  widgetSettings?: Record<string, any>
-  layoutSettings?: Record<string, any>
-  render: () => Promise<any>
+export interface LayoutConfig {
+  name?: string,
+  layout: string,
+  component: () => Promise<any>
+}
+
+export interface PositionConfig {
+  name?: string,
+  position: string,
+  layout: string
+}
+
+export interface WidgetMapping {
+  type: string,
+  path: string,
+  route: string,
+  routeLabel: string
 }
